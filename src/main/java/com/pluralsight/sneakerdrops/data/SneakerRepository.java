@@ -18,4 +18,6 @@ public interface SneakerRepository extends JpaRepository<Sneaker, Long> {
     @Query("SELECT s FROM Sneaker s WHERE s.price <= :maxPrice AND s.releaseYear >= :year")
 
     List<Sneaker> search(@Param("maxPrice") double maxPrice, @Param("year") int year);
+
+    List<Sneaker> brandName(String name);
 }

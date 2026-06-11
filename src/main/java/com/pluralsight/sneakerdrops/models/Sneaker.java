@@ -1,9 +1,6 @@
 package com.pluralsight.sneakerdrops.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
 
 @Entity
@@ -17,13 +14,25 @@ public class Sneaker {
     private double price;
     private int releaseYear;
 
+    @ManyToOne(optional = false)
+    private Brand brand;
+
     public Sneaker() {
     }
 
-    public Sneaker(String model, double price, int releaseYear) {
+    public Sneaker(String model, double price, int releaseYear, Brand brand) {
         this.model = model;
         this.price = price;
         this.releaseYear = releaseYear;
+        this.brand = brand;
+    }
+
+    public Brand getBrand() {
+        return brand;
+    }
+
+    public void setBrand(Brand brand) {
+        this.brand = brand;
     }
 
     public Long getId() {

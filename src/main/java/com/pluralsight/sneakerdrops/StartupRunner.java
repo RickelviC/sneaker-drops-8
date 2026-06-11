@@ -42,6 +42,7 @@ public class StartupRunner implements CommandLineRunner {
             System.out.println("7) Add a Sneaker");
             System.out.println("8) Update a Sneaker price");
             System.out.println("9) Delete a Sneaker");
+            System.out.println("10) List sneakers by brand");
             System.out.println("0) Quit");
             System.out.print("Choose: ");
             switch (scanner.nextInt()) {
@@ -54,12 +55,29 @@ public class StartupRunner implements CommandLineRunner {
                 case 7 -> addSneaker(scanner);
                 case 8 -> updatePrice(scanner);
                 case 9 -> deleteSneaker(scanner);
+                case 10 -> listByBrand(scanner);
 
                 case 0 -> running = false;
                 default -> System.out.println("Unknown option.");
             }
         }
     }
+
+    private void listByBrand(Scanner scanner) {
+        scanner.nextLine();
+        System.out.print("Brand name: ");
+        String name = scanner.nextLine();
+        for (Sneaker s : sneakerRepository.brandName(name)) {
+            System.out.println(s.getModel());
+        }
+    }
+
+    private void listAllBrands() {
+        for (Brand brand : brandRepository.findAll()) {
+            System.out.println(brand.getId() + " - " + brand.getName());
+        }
+    }
+
     private void addSneaker(Scanner scanner) {
         scanner.nextLine();
         System.out.print("model: ");
@@ -68,9 +86,16 @@ public class StartupRunner implements CommandLineRunner {
         double price = scanner.nextDouble();
         System.out.print("Release year: ");
         int year = scanner.nextInt();
-        sneakerRepository.save(new Sneaker(model, price, year));
+        System.out.println("Choose a brand:");
+        listAllBrands();
+        System.out.print("Brand id: ");
+        Long brandId = scanner.nextLong();
+        Brand brand = brandRepository.findById(brandId)
+                .orElseThrow(() -> new RuntimeException("No brand with id " + brandId));
+        sneakerRepository.save(new Sneaker(model, price, year, brand));
         System.out.println("Added!");
     }
+
     private void updatePrice(Scanner scanner) {
         System.out.print("Sneaker id: ");
         long id = scanner.nextLong();
@@ -81,6 +106,7 @@ public class StartupRunner implements CommandLineRunner {
         sneakerRepository.save(sneaker);
         System.out.println("Updated!");
     }
+
     private void deleteSneaker(Scanner scanner) {
         System.out.print("sneaker id: ");
         long id = scanner.nextLong();
@@ -142,20 +168,22 @@ public class StartupRunner implements CommandLineRunner {
     }
 
     private void seedDate() {
-        if (brandRepository.count() == 0) {
-            brandRepository.save(new Brand("Nike"));
-            brandRepository.save(new Brand("Adidas"));
-            brandRepository.save(new Brand("New Balance"));
-            brandRepository.save(new Brand("Puma"));
-            brandRepository.save(new Brand("ReeBok"));
+        if (sneakerRepository.count() > 0) {
+            return;
         }
-        if (sneakerRepository.count() == 0) {
-            sneakerRepository.save(new Sneaker("nikes", 200, 2002));
-            sneakerRepository.save(new Sneaker("Adidas", 120, 2012));
-            sneakerRepository.save(new Sneaker("New Balance", 160, 2025));
-            sneakerRepository.save(new Sneaker("Puma", 90, 2015));
-            sneakerRepository.save(new Sneaker("ReeBok", 140, 2017));
-        }
+
+        Brand nike = brandRepository.save(new Brand("Nike"));
+        Brand adidas = brandRepository.save(new Brand("Adidas"));
+        Brand newBalance = brandRepository.save(new Brand("New Balance"));
+        Brand puma = brandRepository.save(new Brand("Puma"));
+        Brand reebok = brandRepository.save(new Brand("ReeBok"));
+
+        sneakerRepository.save(new Sneaker("nikes", 200, 2002, nike));
+        sneakerRepository.save(new Sneaker("Adidas", 120, 2012, adidas));
+        sneakerRepository.save(new Sneaker("New Balance", 160, 2025, newBalance));
+        sneakerRepository.save(new Sneaker("Puma", 90, 2015, puma));
+        sneakerRepository.save(new Sneaker("ReeBok", 140, 2017, reebok));
+
     }
 
     private void listSneakers() {
