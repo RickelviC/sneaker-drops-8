@@ -178,11 +178,11 @@ public class StartupRunner implements CommandLineRunner {
         Brand puma = brandRepository.save(new Brand("Puma"));
         Brand reebok = brandRepository.save(new Brand("ReeBok"));
 
-        sneakerRepository.save(new Sneaker("nikes", 200, 2002, nike));
-        sneakerRepository.save(new Sneaker("Adidas", 120, 2012, adidas));
-        sneakerRepository.save(new Sneaker("New Balance", 160, 2025, newBalance));
-        sneakerRepository.save(new Sneaker("Puma", 90, 2015, puma));
-        sneakerRepository.save(new Sneaker("ReeBok", 140, 2017, reebok));
+        sneakerRepository.save(new Sneaker("nikes one", 200, 2002, nike));
+        sneakerRepository.save(new Sneaker("Adidas two", 120, 2012, adidas));
+        sneakerRepository.save(new Sneaker("New Balancing", 160, 2025, newBalance));
+        sneakerRepository.save(new Sneaker("Puma puma", 90, 2015, puma));
+        sneakerRepository.save(new Sneaker("ReeBoking", 140, 2017, reebok));
 
     }
 
